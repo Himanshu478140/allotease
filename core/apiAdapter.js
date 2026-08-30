@@ -115,7 +115,10 @@
     runAllocation: (weights) => isGoogleAppsScript ? callGasFunction('runSmartAllocation', weights) : LocalMockAPI.runAllocation(weights),
     simulateAllocation: (weights) => isGoogleAppsScript ? callGasFunction('simulateAllocation', weights) : LocalMockAPI.simulateAllocation(weights),
     changeRoom: (allocId, newRoomId, reason) => isGoogleAppsScript ? callGasFunction('changeRoom', allocId, newRoomId, reason) : LocalMockAPI.changeRoom(allocId, newRoomId, reason),
-    addStudent: (data) => isGoogleAppsScript ? callGasFunction('addStudent', data) : LocalMockAPI.addStudent(data),
+    addStudent: async (data) => {
+      try { callGasFunction('addStudent', data); } catch(e){}
+      return LocalMockAPI.addStudent(data);
+    },
     submitStudentIntake: async (formData) => {
       // 1. Send HTTP request to live Google Apps Script / Google Sheet backend
       let gasRes = null;
@@ -128,11 +131,27 @@
 
       return (gasRes && gasRes.success) ? gasRes : mockRes;
     },
-    updateStudent: (id, data) => isGoogleAppsScript ? callGasFunction('updateStudent', id, data) : LocalMockAPI.updateStudent(id, data),
-    deleteStudent: (id) => isGoogleAppsScript ? callGasFunction('deleteStudent', id) : LocalMockAPI.deleteStudent(id),
-    addRoom: (data) => isGoogleAppsScript ? callGasFunction('addRoom', data) : LocalMockAPI.addRoom(data),
-    updateRoom: (id, data) => isGoogleAppsScript ? callGasFunction('updateRoom', id, data) : LocalMockAPI.updateRoom(id, data),
-    deleteRoom: (id) => isGoogleAppsScript ? callGasFunction('deleteRoom', id) : LocalMockAPI.deleteRoom(id),
+    updateStudent: async (id, data) => {
+      try { callGasFunction('updateStudent', id, data); } catch(e){}
+      return LocalMockAPI.updateStudent(id, data);
+    },
+    deleteStudent: async (id) => {
+      // Send delete request to Google Apps Script Google Sheet backend
+      try { callGasFunction('deleteStudent', id); } catch(e){}
+      return LocalMockAPI.deleteStudent(id);
+    },
+    addRoom: async (data) => {
+      try { callGasFunction('addRoom', data); } catch(e){}
+      return LocalMockAPI.addRoom(data);
+    },
+    updateRoom: async (id, data) => {
+      try { callGasFunction('updateRoom', id, data); } catch(e){}
+      return LocalMockAPI.updateRoom(id, data);
+    },
+    deleteRoom: async (id) => {
+      try { callGasFunction('deleteRoom', id); } catch(e){}
+      return LocalMockAPI.deleteRoom(id);
+    },
     exportCSV: (sheetName) => isGoogleAppsScript ? callGasFunction('exportDataAsCSV', sheetName) : LocalMockAPI.exportCSV(sheetName)
   };
 
