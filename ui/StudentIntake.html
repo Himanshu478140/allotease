@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Hostel Registration - AllotEase</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-page: #F4EBE1;
+      --bg-card: #FAF4EC;
+      --text-main: #605850;
+      --text-muted: #78706A;
+      --border: #D9CEBF;
+      --primary: #C2652A;
+      --primary-hover: #A6521F;
+      --success-bg: #F4EBE1;
+      --success-border: #D9CEBF;
+      --success-text: #4A7C59;
+      --error-bg: #FAF4EC;
+      --error-border: #8C3C3C;
+      --error-text: #8C3C3C;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Manrope', sans-serif;
+    }
+
+    h1, h2, h3, h4, h5, h6, .brand-title {
+      font-family: 'EB Garamond', serif !important;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .registration-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      width: 100%;
+      max-width: 680px;
+      padding: 2.25rem;
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .brand-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      width: 100%;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .brand-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .registration-card {
+        padding: 1.5rem;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    label span {
+      color: #dc2626;
+    }
+
+    input, select {
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background-color: #fff;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .btn-submit {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background-color: var(--primary);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.85rem 1.5rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1.5rem;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      padding: 1rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .alert-success {
+      background-color: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+    }
+
+    .alert-error {
+      background-color: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
+    }
+
+    .success-card {
+      text-align: center;
+      padding: 2rem 1rem;
+      display: none;
+    }
+
+    .success-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      color: var(--success-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .success-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 420px;
+      margin: 0 auto 1.5rem auto;
+      line-height: 1.5;
+    }
+
+    .btn-another {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+
+    .btn-another:hover {
+      background: #f1f5f9;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="registration-card">
+    
+    <div class="brand-header">
+      <h1 class="brand-title">Hostel Application Form</h1>
+    </div>
+
+    <!-- Warden Override Banner -->
+    <div id="warden-override-banner" style="display:none; background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; padding:0.75rem 1rem; border-radius:0.5rem; margin-bottom:1.25rem; font-size:0.85rem; font-weight:500;">
+      <strong>Warden Override Mode</strong>: Registration deadline bypass active. You can submit applications past the deadline.
+    </div>
+
+    <!-- Registration Closed Full-Screen Message -->
+    <div id="registration-closed-view" style="display:none; text-align:center; padding:3rem 1rem;">
+      <div style="margin-bottom:1rem; display:flex; justify-content:center;">
+        <svg viewBox="0 0 24 24" style="width:48px; height:48px; stroke:#dc2626; fill:none; stroke-width:2;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      </div>
+      <h2 style="font-family:'Outfit',sans-serif; font-size:1.75rem; color:#dc2626; margin-bottom:0.75rem; font-weight:700;">
+        Registration Closed
+      </h2>
+      <p style="font-size:1rem; color:#64748b; max-width:440px; margin:0 auto; line-height:1.6;">
+        Registration has closed. Please contact the hostel administration for further assistance.
+      </p>
+    </div>
+
+    <!-- Alert Box for Errors -->
+    <div id="error-alert" class="alert alert-error"></div>
+
+    <!-- Success Confirmation View -->
+    <div id="success-view" class="success-card">
+      <div class="success-icon" style="display:flex; justify-content:center; align-items:center; margin-bottom:1rem;">
+        <svg viewBox="0 0 24 24" style="width:52px; height:52px; stroke:#16a34a; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;"><circle cx="12" cy="12" r="10"></circle><polyline points="16 9 10.5 15 8 12.5"></polyline></svg>
+      </div>
+      <h2 class="success-title">Application submitted successfully.</h2>
+      <p class="success-desc">
+        Your registration details have been received and added as <strong>Unallocated</strong>. You will be automatically notified when room allocation is finalized.
+      </p>
+      <button class="btn-another" onclick="resetFormView()">Register Another Student</button>
+    </div>
+
+    <!-- Main Registration Form -->
+    <form id="student-intake-form" onsubmit="handleFormSubmission(event)">
+      
+      <div class="form-grid">
+        
+        <div class="form-group">
+          <label for="studentId">Student ID / Roll No. <span>*</span></label>
+          <input type="text" id="studentId" name="studentId" placeholder="e.g. STU-1045" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Full Name <span>*</span></label>
+          <input type="text" id="name" name="name" placeholder="e.g. Rohan Sharma" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address <span>*</span></label>
+          <input type="email" id="email" name="email" placeholder="e.g. rohan@example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender <span>*</span></label>
+          <select id="gender" name="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="course">Course <span>*</span></label>
+          <select id="course" name="course" required>
+            <option value="B.Tech">B.Tech</option>
+            <option value="M.Tech">M.Tech</option>
+            <option value="B.Arch">B.Arch</option>
+            <option value="MBA">MBA</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="branch">Branch <span>*</span></label>
+          <select id="branch" name="branch" required>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="ME">ME</option>
+            <option value="CE">CE</option>
+            <option value="EEE">EEE</option>
+            <option value="IT">IT</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="homePinCode">Home PIN Code <span>*</span></label>
+          <input type="text" id="homePinCode" name="homePinCode" placeholder="e.g. 823001" maxlength="6" pattern="[0-9]{6}" required oninput="updatePinDistancePreview(this.value)">
+          <div id="pin-distance-badge" style="display:none; margin-top:0.35rem; font-size:0.8rem; font-weight:600; padding:0.4rem 0.6rem; border-radius:0.4rem;"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="preferredRoomType">Preferred Room Type</label>
+          <select id="preferredRoomType" name="preferredRoomType">
+            <option value="Single AC">Single AC</option>
+            <option value="Double AC">Double AC</option>
+            <option value="Triple AC">Triple AC</option>
+            <option value="Single Non-AC">Single Non-AC</option>
+            <option value="Double Non-AC">Double Non-AC</option>
+            <option value="Triple Non-AC">Triple Non-AC</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="group-preferred-block">
+          <label for="preferredBlock">Preferred Hostel Block</label>
+          <select id="preferredBlock" name="preferredBlock">
+            <option value="">-- No Preference --</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="group-preferred-floor">
+          <label for="preferredFloor">Preferred Floor</label>
+          <select id="preferredFloor" name="preferredFloor">
+            <option value="">-- No Preference --</option>
+          </select>
+        </div>
+
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn-submit">Submit Application</button>
+
+    </form>
+
+  </div>
+
+  <script>
+    (async function initIntakeConfigOnLoad() {
+      try {
+        let config = null;
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) {
+              if (res && res.success && res.data) {
+                applyFormConfig(res.data);
+              }
+            })
+            .getFormIntakeConfig();
+          return;
+        } 
+        
+        let apiFunc = null;
+        if (window.api && typeof window.api.getFormIntakeConfig === 'function') {
+          apiFunc = window.api.getFormIntakeConfig;
+        } else if (window.parent && window.parent.api && typeof window.parent.api.getFormIntakeConfig === 'function') {
+          apiFunc = window.parent.api.getFormIntakeConfig;
+        } else if (window.mockStudentsApi && typeof window.mockStudentsApi.getFormIntakeConfig === 'function') {
+          apiFunc = window.mockStudentsApi.getFormIntakeConfig;
+        }
+
+        if (apiFunc) {
+          const res = await apiFunc();
+          if (res && res.success && res.data) {
+            config = res.data;
+          }
+        }
+
+        if (!config) {
+          try {
+            const saved = localStorage.getItem('allotease_form_intake_config');
+            if (saved) config = JSON.parse(saved);
+          } catch(e){}
+        }
+
+        if (config) {
+          applyFormConfig(config);
+        } else {
+          verifyDeadline(null);
+        }
+      } catch (e) {
+        console.warn('Config load warning:', e);
+        verifyDeadline(null);
+      }
+    })();
+
+    function applyFormConfig(config) {
+      if (!config) return;
+      verifyDeadline(config.intakeDeadline);
+
+      // Apply Standard Field Visibility Settings
+      const vis = config.fieldVisibility || {};
+
+      if (vis.studentId === false) {
+        const el = document.getElementById('studentId');
+        if (el) {
+          el.required = false;
+          const group = el.closest('.form-group');
+          if (group) group.style.display = 'none';
+        }
+      }
+      // Handle Room Type / AC / Capacity field visibility
+      const roomTypeSelect = document.getElementById('preferredRoomType');
+      if (roomTypeSelect) {
+        const group = roomTypeSelect.closest('.form-group');
+        const showAc = vis.acPref !== false;
+        const showCap = vis.capacity !== false;
+
+        if (!showAc && !showCap) {
+          if (group) group.style.display = 'none';
+        } else {
+          if (group) group.style.display = 'flex';
+          let availableTypes = ['Single AC', 'Double AC', 'Triple AC', 'Single Non-AC', 'Double Non-AC', 'Triple Non-AC'];
+
+          if (!showAc) {
+            // Filter out all AC room types when AC Preference is disabled
+            availableTypes = availableTypes.filter(t => !t.includes('AC') || t.includes('Non-AC'));
+          }
+          if (!showCap) {
+            if (!showAc) {
+              if (group) group.style.display = 'none';
+            } else {
+              availableTypes = ['AC Room', 'Non-AC Room'];
+            }
+          }
+
+          roomTypeSelect.innerHTML = availableTypes.map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+      }
+      if (vis.priority === false) {
+        const el = document.getElementById('priority');
+        if (el) {
+          const group = el.closest('.form-group');
+          if (group) group.style.display = 'none';
+        }
+      }
+      if (vis.specialReq === false) {
+        const el = document.getElementById('specialRequirement');
+        if (el) {
+          const group = el.closest('.form-group');
+          if (group) group.style.display = 'none';
+        }
+      }
+      if (vis.roommates === false) {
+        const el = document.getElementById('preferredRoommates');
+        if (el) {
+          const group = el.closest('.form-group');
+          if (group) group.style.display = 'none';
+        }
+      }
+
+      // Preferred Block field visibility & option populator
+      const blockGroup = document.getElementById('group-preferred-block');
+      const blockSelect = document.getElementById('preferredBlock');
+      if (blockGroup && blockSelect) {
+        if (vis.block === false) {
+          blockGroup.style.display = 'none';
+        } else {
+          blockGroup.style.display = 'flex';
+          let rooms = [];
+          if (window.parent && window.parent.state && Array.isArray(window.parent.state.rooms)) {
+            rooms = window.parent.state.rooms;
+          } else if (window.LocalMockDB && Array.isArray(window.LocalMockDB.rooms)) {
+            rooms = window.LocalMockDB.rooms;
+          }
+          
+          const blockSet = new Set();
+          rooms.forEach(r => {
+            const b = r.Block || r['Block'] || r.block;
+            if (b) blockSet.add(String(b).trim());
+          });
+          if (blockSet.size === 0) {
+            blockSet.add('Block A');
+            blockSet.add('Block B');
+            blockSet.add('Block C');
+          }
+          const blockOpts = ['<option value="">-- No Preference --</option>']
+            .concat(Array.from(blockSet).sort().map(b => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`));
+          blockSelect.innerHTML = blockOpts.join('');
+        }
+      }
+
+      // Preferred Floor field visibility & option populator
+      const floorGroup = document.getElementById('group-preferred-floor');
+      const floorSelect = document.getElementById('preferredFloor');
+      if (floorGroup && floorSelect) {
+        if (vis.floor === false) {
+          floorGroup.style.display = 'none';
+        } else {
+          floorGroup.style.display = 'flex';
+          let rooms = [];
+          if (window.parent && window.parent.state && Array.isArray(window.parent.state.rooms)) {
+            rooms = window.parent.state.rooms;
+          } else if (window.LocalMockDB && Array.isArray(window.LocalMockDB.rooms)) {
+            rooms = window.LocalMockDB.rooms;
+          }
+
+          const floorSet = new Set();
+          rooms.forEach(r => {
+            const f = r.Floor || r['Floor'] || r.floor;
+            if (f) floorSet.add(f);
+          });
+          if (floorSet.size === 0) {
+            [1, 2, 3, 4].forEach(f => floorSet.add(f));
+          }
+          const floorOpts = ['<option value="">-- No Preference --</option>']
+            .concat(Array.from(floorSet).sort((a,b) => a - b).map(f => `<option value="${f}">${f == 1 ? 'Ground Floor (Floor 1)' : 'Floor ' + f}</option>`));
+          floorSelect.innerHTML = floorOpts.join('');
+        }
+      }
+
+      // Populate custom course/branch choices
+      if (config.courses && config.courses.length > 0) {
+        const courseSelect = document.getElementById('course');
+        if (courseSelect) {
+          courseSelect.innerHTML = config.courses.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+        }
+      }
+      if (config.branches && config.branches.length > 0) {
+        const branchSelect = document.getElementById('branch');
+        if (branchSelect) {
+          branchSelect.innerHTML = config.branches.map(b => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join('');
+        }
+      }
+
+      // Inject custom fields into form grid
+      const grid = document.querySelector('.form-grid');
+      if (grid && config.customFields && config.customFields.length > 0) {
+        config.customFields.forEach(field => {
+          const div = document.createElement('div');
+          div.className = 'form-group public-custom-field-group';
+
+          let inputHtml = '';
+          if (field.type === 'select') {
+            const opts = (field.options || '').split(',').map(o => o.trim()).filter(Boolean);
+            const optionsHtml = opts.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
+            inputHtml = `<select class="public-custom-input" data-field-label="${escapeHtml(field.label)}" ${field.required ? 'required' : ''}>${optionsHtml}</select>`;
+          } else if (field.type === 'checkbox') {
+            inputHtml = `<label style="display:flex; align-items:center; gap:0.5rem; font-weight:normal; cursor:pointer;">
+              <input type="checkbox" class="public-custom-input" data-field-label="${escapeHtml(field.label)}" style="width:18px; height:18px;">
+              <span>${escapeHtml(field.label)}</span>
+            </label>`;
+          } else if (field.type === 'number') {
+            inputHtml = `<input type="number" class="public-custom-input" data-field-label="${escapeHtml(field.label)}" placeholder="Enter ${escapeHtml(field.label)}" ${field.required ? 'required' : ''}>`;
+          } else {
+            inputHtml = `<input type="text" class="public-custom-input" data-field-label="${escapeHtml(field.label)}" placeholder="Enter ${escapeHtml(field.label)}" ${field.required ? 'required' : ''}>`;
+          }
+
+          if (field.type === 'checkbox') {
+            div.innerHTML = inputHtml;
+          } else {
+            div.innerHTML = `<label>${escapeHtml(field.label)} ${field.required ? '<span>*</span>' : ''}</label>${inputHtml}`;
+          }
+
+          grid.appendChild(div);
+        });
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function verifyDeadline(isoDeadline) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isOverride = urlParams.get('override') === 'true' || urlParams.get('warden') === 'true' || urlParams.get('admin') === 'true';
+
+      const form = document.getElementById('student-intake-form');
+      const header = document.querySelector('.brand-header');
+      const closedView = document.getElementById('registration-closed-view');
+
+      if (isOverride) {
+        const banner = document.getElementById('warden-override-banner');
+        if (banner) banner.style.display = 'block';
+        if (form) form.style.display = 'block';
+        if (header) header.style.display = 'block';
+        if (closedView) closedView.style.display = 'none';
+        return; // Bypass registration closed view!
+      }
+
+      if (!isoDeadline) return;
+
+      const deadlineDate = new Date(isoDeadline);
+      const now = new Date();
+
+      if (!isNaN(deadlineDate.getTime()) && now > deadlineDate) {
+        const errorAlert = document.getElementById('error-alert');
+        const successView = document.getElementById('success-view');
+
+        if (form) form.style.display = 'none';
+        if (header) header.style.display = 'none';
+        if (errorAlert) errorAlert.style.display = 'none';
+        if (successView) successView.style.display = 'none';
+        if (closedView) closedView.style.display = 'block';
+      } else {
+        if (form) form.style.display = 'block';
+        if (header) header.style.display = 'block';
+        if (closedView) closedView.style.display = 'none';
+      }
+    }
+
+    async function handleFormSubmission(event) {
+      event.preventDefault();
+      
+      const submitBtn = document.getElementById('submit-btn');
+      const errorAlert = document.getElementById('error-alert');
+      const successView = document.getElementById('success-view');
+      const form = document.getElementById('student-intake-form');
+
+      errorAlert.style.display = 'none';
+
+      const customFieldsData = {};
+      const customInputs = document.querySelectorAll('.public-custom-input');
+      customInputs.forEach(input => {
+        const label = input.getAttribute('data-field-label') || input.name || input.id;
+        const val = input.type === 'checkbox' ? (input.checked ? 'Yes' : 'No') : input.value;
+        if (label) customFieldsData[label] = val;
+      });
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const isOverride = urlParams.get('override') === 'true' || urlParams.get('warden') === 'true' || urlParams.get('admin') === 'true';
+
+      const formData = {
+        studentId: document.getElementById('studentId').value.trim().toUpperCase(),
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email')?.value.trim() || '',
+        'Email Address': document.getElementById('email')?.value.trim() || '',
+        gender: document.getElementById('gender').value,
+        course: document.getElementById('course').value,
+        branch: document.getElementById('branch').value,
+        year: document.getElementById('year')?.value || '1st Year',
+        category: document.getElementById('category')?.value || 'General',
+        homePinCode: document.getElementById('homePinCode')?.value.trim() || '',
+        preferredRoomType: document.getElementById('preferredRoomType')?.value || 'Single AC',
+        preferredBlock: document.getElementById('preferredBlock')?.value || '',
+        preferredFloor: document.getElementById('preferredFloor')?.value || '',
+        priority: document.getElementById('priority')?.value || 'General Applicants / Local Quota',
+        preferredRoommates: document.getElementById('preferredRoommates')?.value?.trim() || '',
+        specialRequirement: document.getElementById('specialRequirement')?.value || 'None',
+        customFields: customFieldsData,
+        isOverride: isOverride,
+        override: isOverride
+      };
+
+      if (!formData.name) {
+        showError('Please fill out all required fields.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Submitting Application...';
+
+      // 1. Google Apps Script Mode
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Submit Application';
+            if (res && res.success) {
+              showSuccess();
+            } else {
+              showError(res ? res.message : 'Submission failed.');
+            }
+          })
+          .withFailureHandler(function(err) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Submit Application';
+            showError(err ? err.message || err.toString() : 'Server error occurred.');
+          })
+          .submitStudentIntake(formData);
+      } 
+      // 2. Local Preview / Iframe / Standalone Mode
+      else {
+        try {
+          let submitFunc = null;
+          if (window.api && typeof window.api.submitStudentIntake === 'function') {
+            submitFunc = window.api.submitStudentIntake;
+          } else if (window.parent && window.parent.api && typeof window.parent.api.submitStudentIntake === 'function') {
+            submitFunc = window.parent.api.submitStudentIntake;
+          } else if (window.opener && window.opener.api && typeof window.opener.api.submitStudentIntake === 'function') {
+            submitFunc = window.opener.api.submitStudentIntake;
+          } else if (window.mockStudentsApi && typeof window.mockStudentsApi.submitStudentIntake === 'function') {
+            submitFunc = window.mockStudentsApi.submitStudentIntake;
+          }
+
+          if (submitFunc) {
+            const res = await submitFunc(formData);
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Submit Application';
+            if (res && res.success) {
+              // Notify parent / opener window to refresh student database in real time
+              if (window.parent && typeof window.parent.refreshAllData === 'function') {
+                try { window.parent.refreshAllData(); } catch(e){}
+              }
+              if (window.opener && typeof window.opener.refreshAllData === 'function') {
+                try { window.opener.refreshAllData(); } catch(e){}
+              }
+              showSuccess();
+            } else {
+              showError(res ? res.message : 'Submission failed.');
+            }
+          } else {
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Submit Application';
+            showError('Unable to connect to allocation backend.');
+          }
+        } catch (e) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Submit Application';
+          showError('Error: ' + e.toString());
+        }
+      }
+    }
+
+    function showSuccess() {
+      document.getElementById('student-intake-form').style.display = 'none';
+      document.getElementById('error-alert').style.display = 'none';
+      document.getElementById('success-view').style.display = 'block';
+    }
+
+    function showError(msg) {
+      const alert = document.getElementById('error-alert');
+      alert.innerText = msg;
+      alert.style.display = 'block';
+    }
+
+    function resetFormView() {
+      document.getElementById('student-intake-form').reset();
+      document.getElementById('student-intake-form').style.display = 'block';
+      document.getElementById('error-alert').style.display = 'none';
+      document.getElementById('success-view').style.display = 'none';
+      const badge = document.getElementById('pin-distance-badge');
+      if (badge) badge.style.display = 'none';
+    }
+
+    function updatePinDistancePreview(pinVal) {
+      const badge = document.getElementById('pin-distance-badge');
+      if (!badge) return;
+
+      const cleanPin = String(pinVal || '').replace(/\D/g, '').trim();
+      if (cleanPin.length !== 6) {
+        badge.style.display = 'none';
+        return;
+      }
+
+      badge.style.display = 'block';
+      if (typeof window.lookupPinCode === 'function') {
+        const res = window.lookupPinCode(cleanPin);
+        if (res.found && res.distanceKm !== null) {
+          if (res.distanceSource === 'PIN') {
+            badge.style.background = '#f0fdf4';
+            badge.style.color = '#166534';
+            badge.style.border = '1px solid #bbf7d0';
+            badge.innerHTML = `Estimated distance from college: ${res.distanceKm} km (Source: PIN - ${res.city || res.district}, ${res.state})`;
+          } else {
+            badge.style.background = '#fffbeb';
+            badge.style.color = '#92400e';
+            badge.style.border = '1px solid #fde68a';
+            badge.innerHTML = `Estimated distance: ${res.distanceKm} km (Source: ${res.distanceSource} - ${res.district || res.state})`;
+          }
+        } else {
+          badge.style.background = '#fef2f2';
+          badge.style.color = '#991b1b';
+          badge.style.border = '1px solid #fecaca';
+          badge.innerHTML = `PIN code not found in reference data. Distance will use configured fallback.`;
+        }
+      }
+    }
+  </script>
+
+  <!-- Core Script Inclusions for Standalone Browser Mode -->
+  <script src="core/geoUtils.js?v=5.4"></script>
+  <script src="core/mockStore.js?v=5.4"></script>
+  <script src="core/mockStudentsApi.js?v=5.4"></script>
+  <script src="core/apiAdapter.js?v=5.4"></script>
+
+</body>
+</html>

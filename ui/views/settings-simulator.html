@@ -1,0 +1,40 @@
+<!-- VIEW 10: SETTINGS & WHAT-IF SIMULATOR -->
+<div class="table-card" style="padding:1.75rem; display:flex; flex-direction:column; gap:1.25rem;">
+  <h3 style="font-family:'Outfit'; color:var(--accent-blue); display:flex; align-items:center; gap:0.5rem;">
+    <svg viewBox="0 0 24 24" style="width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+    <span>What-If Weight Simulation Engine</span>
+  </h3>
+  <p style="font-size:0.85rem; color:var(--text-secondary);">
+    Adjust scoring weights to simulate alternative allocation strategies without modifying Google Sheets data.
+  </p>
+
+  <div class="simulator-sliders-grid">
+    <div class="slider-group">
+      <div class="slider-header"><span>Room Type Weight</span><strong>30 pts</strong></div>
+      <input type="range" id="slider-roomtype" min="0" max="50" value="30">
+    </div>
+    <div class="slider-group">
+      <div class="slider-header"><span>Block Preference Weight</span><strong>20 pts</strong></div>
+      <input type="range" id="slider-block" min="0" max="50" value="20">
+    </div>
+    <div class="slider-group">
+      <div class="slider-header"><span>Floor Preference Weight</span><strong>10 pts</strong></div>
+      <input type="range" id="slider-floor" min="0" max="30" value="10">
+    </div>
+    <div class="slider-group">
+      <div class="slider-header"><span>Roommate Compatibility Weight</span><strong>20 pts</strong></div>
+      <input type="range" id="slider-roommate" min="0" max="40" value="20">
+    </div>
+    <div class="slider-group">
+      <div class="slider-header"><span>Priority Bonus Weight</span><strong>10 pts</strong></div>
+      <input type="range" id="slider-priority" min="0" max="30" value="10">
+    </div>
+    <div class="slider-group">
+      <div class="slider-header"><span>Special Requirement Weight</span><strong>10 pts</strong></div>
+      <input type="range" id="slider-specialreq" min="0" max="30" value="10">
+    </div>
+  </div>
+
+  <button class="btn btn-primary" id="btn-run-simulation" style="width:200px; max-width:100%;">Simulate Allocation</button>
+  <div id="sim-result-box" style="margin-top:1rem;"></div>
+</div>

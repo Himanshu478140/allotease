@@ -1,0 +1,132 @@
+<!-- VIEW 4: ROOMS -->
+<div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+  <!-- Building Layout & Room Inventory Setup Card -->
+  <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.5rem; display:flex; flex-direction:column; gap:1.25rem;">
+    <!-- Title & Action Buttons Header Row -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <h3 style="font-family:var(--font-heading); font-size:1.45rem; font-weight:700; color:var(--text-primary); margin:0;">
+          Building Layout & Room Inventory Setup
+        </h3>
+        <p style="font-size:0.92rem; color:var(--text-secondary); margin-top:0.35rem; margin-bottom:0;">
+          Manually specify your hostel capacity (e.g. 10 AC rooms on Floor 1, 15 Non-AC rooms on Floor 2).
+        </p>
+      </div>
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+        <button class="btn btn-secondary" onclick="downloadCSV('Rooms')" style="padding:0.4rem 0.85rem; font-size:0.8rem; display:inline-flex; align-items:center; gap:0.4rem;">
+          <svg viewBox="0 0 24 24" style="width:14px; height:14px; stroke:currentColor; stroke-width:2; fill:none;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Export Rooms CSV</span>
+        </button>
+        <button class="btn btn-secondary" onclick="addBuildingLayoutRow()" style="padding:0.4rem 0.85rem; font-size:0.8rem;">
+          Add Layout Row
+        </button>
+        <button class="btn btn-primary" onclick="applyBuildingLayoutToRooms()" style="padding:0.4rem 0.85rem; font-size:0.8rem;">
+          Apply Layout
+        </button>
+      </div>
+    </div>
+
+    <!-- Full Width Room Numbering Formats Guidance Container -->
+    <div style="width:100%; font-size:0.85rem; background:rgba(56, 189, 248, 0.08); border:1px dashed rgba(56, 189, 248, 0.4); border-radius:var(--radius-sm); padding:0.75rem 1rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:0.35rem; box-sizing:border-box;">
+      <div style="font-weight:600; color:var(--accent-blue); display:flex; align-items:center; gap:0.4rem;">
+        Room Numbering Formats:
+      </div>
+      <div>• <strong>Sequential:</strong> Type <code>101</code> (count: 5) -&gt; <code>101, 102, 103, 104, 105</code> | Type <code>A-101</code> -&gt; <code>A-101, A-102...</code></div>
+      <div>• <strong>Custom List:</strong> Type comma-separated list like <code>101, 102, 103A, 103B, 104</code> for exact custom numbers.</div>
+    </div>
+
+    <!-- Live Capacity Summary Metrics -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:0.75rem; background:var(--bg-main); padding:0.85rem 1.25rem; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+      <div>
+        <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:600; display:block;">Total Rooms</span>
+        <strong style="font-size:1.25rem; font-family:'Outfit'; color:var(--accent-blue);" id="layout-total-rooms">0 Rooms</strong>
+      </div>
+      <div>
+        <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:600; display:block;">AC Rooms</span>
+        <strong style="font-size:1.25rem; font-family:'Outfit'; color:var(--accent-emerald);" id="layout-ac-rooms">0 AC</strong>
+      </div>
+      <div>
+        <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:600; display:block;">Non-AC Rooms</span>
+        <strong style="font-size:1.25rem; font-family:'Outfit'; color:var(--accent-amber);" id="layout-nonac-rooms">0 Non-AC</strong>
+      </div>
+      <div>
+        <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:600; display:block;">Total Bed Capacity</span>
+        <strong style="font-size:1.25rem; font-family:'Outfit'; color:var(--accent-purple);" id="layout-total-beds">0 Beds</strong>
+      </div>
+    </div>
+
+    <!-- Building Composition Table -->
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th style="min-width:120px;">Hostel Block</th>
+            <th style="min-width:90px;">Floor</th>
+            <th style="min-width:160px;">Room Category</th>
+            <th style="min-width:150px;">Starting No. / Room List</th>
+            <th style="width:110px;">No. of Rooms</th>
+            <th style="width:120px;">Monthly Rent (₹)</th>
+            <th style="width:50px;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="building-layout-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3D Interactive Hostel Campus Visualizer Panel -->
+  <div id="panel-3d-hostel-visualizer" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.5rem; display:flex; flex-direction:column; gap:1rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+      <div>
+        <h3 style="font-family:var(--font-heading); font-size:1.45rem; font-weight:700; color:var(--text-primary); margin:0;">
+          Interactive 3D Hostel Campus & Floor Plan Explorer
+        </h3>
+        <p style="font-size:0.92rem; color:var(--text-secondary); margin-top:0.35rem; margin-bottom:0;">
+          Rotate, tilt, zoom, and inspect room allocation statuses in full WebGL 3D. Click any 3D room block to audit details.
+        </p>
+      </div>
+      <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+        <button class="btn btn-secondary" onclick="window.reset3DCameraView()" style="padding:0.4rem 0.85rem; font-size:0.8rem;">
+          Reset Camera View
+        </button>
+        <button class="btn btn-primary" id="btn-3d-autorotate" onclick="window.toggle3DAutoRotation()" style="padding:0.4rem 0.85rem; font-size:0.8rem;">
+          Auto Rotate 360°
+        </button>
+      </div>
+    </div>
+
+    <!-- 3D Status Legend Bar -->
+    <div style="display:flex; gap:1.25rem; flex-wrap:wrap; background:var(--bg-main); padding:0.65rem 1rem; border-radius:var(--radius-sm); border:1px solid var(--border-color); font-size:0.82rem;">
+      <div style="display:flex; align-items:center; gap:0.4rem;">
+        <span style="width:12px; height:12px; background:#4A7C59; border-radius:3px; display:inline-block;"></span>
+        <span>Vacant / Available</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.4rem;">
+        <span style="width:12px; height:12px; background:#C2652A; border-radius:3px; display:inline-block;"></span>
+        <span>Partially Allocated</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.4rem;">
+        <span style="width:12px; height:12px; background:#8C3C3C; border-radius:3px; display:inline-block;"></span>
+        <span>Fully Occupied</span>
+      </div>
+    </div>
+
+    <!-- WebGL 3D Canvas Viewport Container -->
+    <div style="position:relative; width:100%; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-color); background:#F4EBE1;">
+      <div id="hostel-3d-canvas-container" style="width:100%; height:480px; cursor:grab;"></div>
+
+      <!-- Floating 3D Tooltip -->
+      <div id="3d-room-tooltip" style="display:none; position:absolute; z-index:100; pointer-events:none; background:rgba(250, 244, 236, 0.95); backdrop-filter:blur(8px); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.85rem; box-shadow:0 10px 25px rgba(96, 88, 80, 0.18); width:240px;"></div>
+    </div>
+  </div>
+
+  <!-- Live Rooms Cards Grid Header -->
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-top:0.5rem;">
+    <h3 style="font-family:var(--font-heading); font-size:1.45rem; font-weight:700; color:var(--text-primary); margin:0;">Live Room Cards Inventory</h3>
+    <input type="text" class="input-field" id="search-rooms" placeholder="Filter by Block or Room Number..." style="width:100%; max-width:320px;">
+  </div>
+
+  <div class="stats-grid" id="rooms-cards-grid"></div>
+
+</div>

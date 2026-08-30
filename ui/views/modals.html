@@ -1,0 +1,120 @@
+<!-- Fee Payment Record Modal with Custom Select Dropdown (AGENTS.md Rule 1 & Rule 1.5) -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal-card" style="max-width: 480px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 class="modal-title">Fee & Payment Record</h3>
+      <button class="btn btn-secondary" onclick="closeModal('payment-modal')">✕</button>
+    </div>
+    
+    <input type="hidden" id="payment-student-id">
+
+    <div class="form-group" style="margin-top:1rem;">
+      <label class="form-label">Total Rent Due (₹)</label>
+      <input type="number" class="input-field" id="payment-rent-due" placeholder="e.g. 8000">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Amount Paid to Date (₹)</label>
+      <input type="number" class="input-field" id="payment-amount-paid" placeholder="e.g. 8000">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Payment Status</label>
+      <div class="custom-select-wrapper" id="payment-status-select-wrapper">
+        <div class="custom-select-trigger" id="payment-status-trigger">
+          <span id="payment-status-selected-label">Pending</span>
+          <span style="font-size:0.75rem; color:var(--text-secondary);">▼</span>
+        </div>
+        <div class="custom-select-dropdown" id="payment-status-dropdown">
+          <div class="custom-select-option" data-value="Paid">Paid</div>
+          <div class="custom-select-option" data-value="Pending">Pending</div>
+          <div class="custom-select-option" data-value="Overdue">Overdue</div>
+        </div>
+      </div>
+      <input type="hidden" id="payment-status-value" value="Pending">
+    </div>
+
+    <div style="display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1.25rem;">
+      <button class="btn btn-secondary" onclick="closeModal('payment-modal')">Cancel</button>
+      <button class="btn btn-success" onclick="submitPaymentRecord()">Save Payment Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Confirmation Modal (AGENTS.md Rule 1) -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-card" style="max-width: 450px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 class="modal-title" id="confirm-modal-title">Confirmation Needed</h3>
+      <button class="btn btn-secondary" id="confirm-modal-close" style="min-height:30px; padding:0.2rem 0.5rem;">✕</button>
+    </div>
+    <p id="confirm-modal-message" style="font-size:0.9rem; color:var(--text-secondary); line-height:1.5;"></p>
+    <div style="display:flex; gap:0.75rem; justify-content:flex-end; margin-top:0.5rem;">
+      <button class="btn btn-secondary" id="confirm-modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="confirm-modal-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Explain Allocation Inspector Modal -->
+<div class="modal-overlay" id="explain-modal">
+  <div class="modal-card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 class="modal-title">Allocation Decision Audit</h3>
+      <button class="btn btn-secondary" onclick="closeModal('explain-modal')">✕</button>
+    </div>
+    <div id="explain-modal-content"></div>
+  </div>
+</div>
+
+<!-- Manual Override Modal with Custom Select Dropdown (AGENTS.md Rule 1.5) -->
+<div class="modal-overlay" id="override-modal">
+  <div class="modal-card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 class="modal-title">Manual Room Override</h3>
+      <button class="btn btn-secondary" onclick="closeModal('override-modal')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Allocation ID</label>
+      <input type="text" class="input-field" id="override-alloc-id" readonly style="background:#E4D7C7; border:1px solid #D6C7B4; color:var(--text-primary, #2A2421); font-weight:700; opacity:1;">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Current Room</label>
+      <input type="text" class="input-field" id="override-current-room" readonly style="background:#E4D7C7; border:1px solid #D6C7B4; color:var(--text-primary, #2A2421); font-weight:700; opacity:1;">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Select Target Room</label>
+      <div class="custom-select-wrapper" id="override-room-select">
+        <div class="custom-select-trigger" id="override-room-trigger">
+          <span id="override-room-selected-label">Select Target Room...</span>
+          <span style="font-size:0.75rem; color:var(--text-secondary);">▼</span>
+        </div>
+        <div class="custom-select-dropdown" id="override-room-dropdown"></div>
+      </div>
+      <input type="hidden" id="override-new-room-value">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Reason for Override</label>
+      <input type="text" class="input-field" id="override-reason" placeholder="Administrative request / medical re-location...">
+    </div>
+    <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+      <button class="btn btn-secondary" onclick="closeModal('override-modal')">Cancel</button>
+      <button class="btn btn-warning" onclick="submitManualOverride()">Submit Override</button>
+    </div>
+  </div>
+</div>
+
+<!-- Student Details Modal Overlay -->
+<div class="modal-overlay" id="student-details-modal">
+  <div class="modal-card" style="max-width: 720px; max-height: 85vh; overflow-y: auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:0.75rem; margin-bottom:1rem;">
+      <h3 class="modal-title" style="display:flex; align-items:center; gap:0.5rem; color:var(--accent-blue);">
+        Complete Student Application Record
+      </h3>
+      <button class="btn btn-secondary" onclick="closeModal('student-details-modal')">✕</button>
+    </div>
+    <div id="student-details-modal-content">
+      <!-- Dynamically populated sections -->
+    </div>
+  </div>
+</div>
