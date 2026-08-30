@@ -110,7 +110,18 @@
     simulateAllocation: (weights) => isGoogleAppsScript ? callGasFunction('simulateAllocation', weights) : LocalMockAPI.simulateAllocation(weights),
     changeRoom: (allocId, newRoomId, reason) => isGoogleAppsScript ? callGasFunction('changeRoom', allocId, newRoomId, reason) : LocalMockAPI.changeRoom(allocId, newRoomId, reason),
     addStudent: (data) => isGoogleAppsScript ? callGasFunction('addStudent', data) : LocalMockAPI.addStudent(data),
-    submitStudentIntake: (formData) => isGoogleAppsScript ? callGasFunction('submitStudentIntake', formData) : LocalMockAPI.submitStudentIntake(formData),
+    submitStudentIntake: async (formData) => {
+      // 1. Send HTTP request to live Google Apps Script / Google Sheet backend
+      let gasRes = null;
+      try {
+        gasRes = await callGasFunction('submitStudentIntake', formData);
+      } catch(e) { console.warn('GAS HTTP bridge fetch notice:', e); }
+
+      // 2. Also record in local store for instant UI rendering
+      const mockRes = await LocalMockAPI.submitStudentIntake(formData);
+
+      return (gasRes && gasRes.success) ? gasRes : mockRes;
+    },
     updateStudent: (id, data) => isGoogleAppsScript ? callGasFunction('updateStudent', id, data) : LocalMockAPI.updateStudent(id, data),
     deleteStudent: (id) => isGoogleAppsScript ? callGasFunction('deleteStudent', id) : LocalMockAPI.deleteStudent(id),
     addRoom: (data) => isGoogleAppsScript ? callGasFunction('addRoom', data) : LocalMockAPI.addRoom(data),

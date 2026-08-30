@@ -50,3 +50,29 @@ function initializeApp() {
   initializeSheets(ss);
   return createResponse(true, null, 'AllotEase sheets & system configuration initialized.');
 }
+
+/**
+ * Handles cross-origin HTTP POST requests from external frontends (e.g. GitHub Pages).
+ */
+function doPost(e) {
+  try {
+    let payload = {};
+    if (e && e.postData && e.postData.contents) {
+      payload = JSON.parse(e.postData.contents);
+    }
+    const action = payload.action || (e && e.parameter ? e.parameter.action : '');
+    const args = payload.args || [];
+
+    if (action && typeof this[action] === 'function') {
+      const res = this[action](...args);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ success: false, message: 'Action not found: ' + action }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ success: false, message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
