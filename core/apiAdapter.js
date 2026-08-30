@@ -13,16 +13,28 @@
 
   console.log(`[API Adapter] Initialized. Runtime Mode: ${isGoogleAppsScript ? 'Google Apps Script (GAS)' : 'Local Browser Simulator'}`);
 
+  // Live Google Apps Script Web App Deployment URL
+  window.GAS_API_URL = 'https://script.google.com/macros/s/AKfycbw5vLt0X8VP8_5mbPzMC7HwqoLQjiMf2R57MFX7_U0sceyGf9sW9q3PwZH1PE_mMQNA/exec';
+
   /**
    * Helper to invoke Google Apps Script backend as a Promise
    */
   function callGasFunction(funcName, ...args) {
-    return new Promise((resolve, reject) => {
-      window.google.script.run
-        .withSuccessHandler(response => resolve(response))
-        .withFailureHandler(error => reject(error))
-        [funcName](...args);
-    });
+    if (isGoogleAppsScript) {
+      return new Promise((resolve, reject) => {
+        window.google.script.run
+          .withSuccessHandler(response => resolve(response))
+          .withFailureHandler(error => reject(error))
+          [funcName](...args);
+      });
+    } else if (window.GAS_API_URL) {
+      // Remote HTTP fetch bridge to Apps Script Web App for GitHub Pages
+      return fetch(window.GAS_API_URL + '?action=' + encodeURIComponent(funcName), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: JSON.stringify({ action: funcName, args: args })
+      }).then(r => r.json()).catch(() => LocalMockAPI[funcName] ? LocalMockAPI[funcName](...args) : { success: false });
+    }
   }
 
   // Combined LocalMockAPI delegator
