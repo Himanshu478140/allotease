@@ -29,11 +29,17 @@
       });
     } else if (window.GAS_API_URL) {
       // Remote HTTP fetch bridge to Apps Script Web App for GitHub Pages
-      return fetch(window.GAS_API_URL + '?action=' + encodeURIComponent(funcName), {
+      const postData = JSON.stringify({ action: funcName, args: args });
+      return fetch(window.GAS_API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: JSON.stringify({ action: funcName, args: args })
-      }).then(r => r.json()).catch(() => LocalMockAPI[funcName] ? LocalMockAPI[funcName](...args) : { success: false });
+        mode: 'cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: postData,
+        redirect: 'follow'
+      }).then(r => r.json()).catch(err => {
+        console.warn('GAS fetch notice:', err);
+        return LocalMockAPI[funcName] ? LocalMockAPI[funcName](...args) : { success: false };
+      });
     }
   }
 
