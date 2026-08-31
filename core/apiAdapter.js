@@ -89,32 +89,65 @@
   window.api = {
     isGas: isGoogleAppsScript,
     getBuildingLayout: () => isGoogleAppsScript ? callGasFunction('getBuildingLayout') : LocalMockAPI.getBuildingLayout(),
-    saveBuildingLayout: (layout) => isGoogleAppsScript ? callGasFunction('saveBuildingLayout', layout) : LocalMockAPI.saveBuildingLayout(layout),
+    saveBuildingLayout: async (layout) => {
+      try { callGasFunction('saveBuildingLayout', layout); } catch(e){}
+      return LocalMockAPI.saveBuildingLayout(layout);
+    },
     getPriorityTiers: () => isGoogleAppsScript ? callGasFunction('getPriorityTiers') : LocalMockAPI.getPriorityTiers(),
-    savePriorityTiers: (tiers) => isGoogleAppsScript ? callGasFunction('savePriorityTiers', tiers) : LocalMockAPI.savePriorityTiers(tiers),
+    savePriorityTiers: async (tiers) => {
+      try { callGasFunction('savePriorityTiers', tiers); } catch(e){}
+      return LocalMockAPI.savePriorityTiers(tiers);
+    },
     getPropertyConfig: () => isGoogleAppsScript ? callGasFunction('getPropertyConfig') : LocalMockAPI.getPropertyConfig(),
-    savePropertyConfig: (softFactors, hardConstraints, collegeLocation, autoEmailNotices) => isGoogleAppsScript ? callGasFunction('savePropertyConfig', { softFactors, hardConstraints, collegeLocation, autoEmailNotices }) : LocalMockAPI.savePropertyConfig(softFactors, hardConstraints, collegeLocation, autoEmailNotices),
-    getFormIntakeConfig: () => isGoogleAppsScript ? callGasFunction('getFormIntakeConfig') : LocalMockAPI.getFormIntakeConfig(),
-    saveFormIntakeConfig: (config) => isGoogleAppsScript ? callGasFunction('saveFormIntakeConfig', config) : LocalMockAPI.saveFormIntakeConfig(config),
+    savePropertyConfig: async (softFactors, hardConstraints, collegeLocation, autoEmailNotices) => {
+      try { callGasFunction('savePropertyConfig', { softFactors, hardConstraints, collegeLocation, autoEmailNotices }); } catch(e){}
+      return LocalMockAPI.savePropertyConfig(softFactors, hardConstraints, collegeLocation, autoEmailNotices);
+    },
+    getFormIntakeConfig: async () => {
+      let gasRes = null;
+      try {
+        gasRes = await callGasFunction('getFormIntakeConfig');
+      } catch(e){}
+      return (gasRes && gasRes.success) ? gasRes : LocalMockAPI.getFormIntakeConfig();
+    },
+    saveFormIntakeConfig: async (config) => {
+      try { callGasFunction('saveFormIntakeConfig', config); } catch(e){}
+      return LocalMockAPI.saveFormIntakeConfig(config);
+    },
     fetchResponseSheetHeaders: (url) => isGoogleAppsScript ? callGasFunction('fetchResponseSheetHeaders', url) : LocalMockAPI.fetchResponseSheetHeaders(url),
     syncFormResponses: () => isGoogleAppsScript ? callGasFunction('syncFormResponses') : LocalMockAPI.syncFormResponses(),
     sendAllocationEmails: (ids) => isGoogleAppsScript ? callGasFunction('sendAllocationEmails', ids) : LocalMockAPI.sendAllocationEmails(ids),
-    updatePaymentStatus: (id, paid, due, status) => isGoogleAppsScript ? callGasFunction('updatePaymentStatus', id, paid, due, status) : LocalMockAPI.updatePaymentStatus(id, paid, due, status),
-    checkoutStudent: (id, allocId) => isGoogleAppsScript ? callGasFunction('checkoutStudent', id, allocId) : LocalMockAPI.checkoutStudent(id, allocId),
+    updatePaymentStatus: async (id, paid, due, status) => {
+      try { callGasFunction('updatePaymentStatus', id, paid, due, status); } catch(e){}
+      return LocalMockAPI.updatePaymentStatus(id, paid, due, status);
+    },
+    checkoutStudent: async (id, allocId) => {
+      try { callGasFunction('checkoutStudent', id, allocId); } catch(e){}
+      return LocalMockAPI.checkoutStudent(id, allocId);
+    },
     resetDemo: () => isGoogleAppsScript ? callGasFunction('resetDemo') : LocalMockAPI.resetDemo(),
     generateDemoData: () => isGoogleAppsScript ? callGasFunction('generateDemoData') : LocalMockAPI.generateDemoData(),
     getStudents: () => isGoogleAppsScript ? callGasFunction('getStudents') : LocalMockAPI.getStudents(),
     getRooms: () => isGoogleAppsScript ? callGasFunction('getRooms') : LocalMockAPI.getRooms(),
-    saveRooms: (rooms) => isGoogleAppsScript ? callGasFunction('saveRooms', rooms) : LocalMockAPI.saveRooms(rooms),
+    saveRooms: async (rooms) => {
+      try { callGasFunction('saveRooms', rooms); } catch(e){}
+      return LocalMockAPI.saveRooms(rooms);
+    },
     getAllocations: () => isGoogleAppsScript ? callGasFunction('getAllocations') : LocalMockAPI.getAllocations(),
     getWaitingList: () => isGoogleAppsScript ? callGasFunction('getWaitingList') : LocalMockAPI.getWaitingList(),
     getDashboardStats: () => isGoogleAppsScript ? callGasFunction('getDashboardStats') : LocalMockAPI.getDashboardStats(),
     getBeforeVsAfterMetrics: () => isGoogleAppsScript ? callGasFunction('getBeforeVsAfterMetrics') : LocalMockAPI.getBeforeVsAfterMetrics(),
     getReportData: () => isGoogleAppsScript ? callGasFunction('getReportData') : (async () => ({ success: true, data: { byBranch: { CSE: 16, ECE: 12, ME: 8, CE: 4 }, byYear: { '1st Year': 10, '2nd Year': 10, '3rd Year': 10, 'Final Year': 10 } } }))(),
     calculateScore: (student, room, weights) => window.mockCalculateSoftScore(student, room, weights),
-    runAllocation: (weights) => isGoogleAppsScript ? callGasFunction('runSmartAllocation', weights) : LocalMockAPI.runAllocation(weights),
+    runAllocation: async (weights) => {
+      try { callGasFunction('runSmartAllocation', weights); } catch(e){}
+      return LocalMockAPI.runAllocation(weights);
+    },
     simulateAllocation: (weights) => isGoogleAppsScript ? callGasFunction('simulateAllocation', weights) : LocalMockAPI.simulateAllocation(weights),
-    changeRoom: (allocId, newRoomId, reason) => isGoogleAppsScript ? callGasFunction('changeRoom', allocId, newRoomId, reason) : LocalMockAPI.changeRoom(allocId, newRoomId, reason),
+    changeRoom: async (allocId, newRoomId, reason) => {
+      try { callGasFunction('changeRoom', allocId, newRoomId, reason); } catch(e){}
+      return LocalMockAPI.changeRoom(allocId, newRoomId, reason);
+    },
     addStudent: async (data) => {
       try { callGasFunction('addStudent', data); } catch(e){}
       return LocalMockAPI.addStudent(data);

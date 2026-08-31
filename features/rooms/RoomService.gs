@@ -189,3 +189,44 @@ function syncRoomOccupancy(ss = SpreadsheetApp.getActiveSpreadsheet()) {
     console.error('Error syncing room occupancy:', e);
   }
 }
+
+/**
+ * Saves entire array of rooms into Rooms sheet tab.
+ */
+function saveRooms(rooms) {
+  try {
+    if (!Array.isArray(rooms)) return createResponse(false, null, 'Invalid rooms data array.');
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    initializeSheets(ss);
+    const sheet = ss.getSheetByName(CONFIG.SHEETS.ROOMS);
+    
+    // Clear rows below header
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
+    }
+
+    rooms.forEach(r => {
+      const cleanId = String(r['Room ID'] || r.roomId || r['Room Number'] || '').trim().toUpperCase();
+      const cap = parseInt(r['Capacity'] || r.capacity) || 2;
+      const occ = parseInt(r['Current Occupancy'] || r.occupancy) || 0;
+      const avail = Math.max(0, cap - occ);
+      sheet.appendRow([
+        cleanId,
+        r['Block'] || r.block || 'Block A',
+        parseInt(r['Floor'] || r.floor) || 1,
+        r['Room Number'] || r.roomNumber || cleanId,
+        r['Room Type'] || r.roomType || 'Double AC',
+        cap,
+        occ,
+        avail,
+        r['Gender'] || r.gender || 'Male',
+        r['Status'] || r.status || (avail > 0 ? CONFIG.ROOM_STATUS.AVAILABLE : CONFIG.ROOM_STATUS.FULL)
+      ]);
+    });
+
+    return createResponse(true, { count: rooms.length }, `Saved ${rooms.length} rooms to Google Sheet.`);
+  } catch (e) {
+    return createResponse(false, null, e.toString());
+  }
+}
