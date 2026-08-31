@@ -109,7 +109,7 @@
       }
       try {
         const gasRes = await callGasFunction('getFormIntakeConfig');
-        if (gasRes && gasRes.success && gasRes.data) {
+        if (gasRes && gasRes.success && gasRes.data && (gasRes.data.fieldVisibility || gasRes.data.customFields || gasRes.data.formEmbedUrl || Object.keys(gasRes.data.fieldMapping || {}).length > 0 || gasRes.data.intakeDeadline)) {
           return gasRes;
         }
       } catch (e) {}

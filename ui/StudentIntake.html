@@ -383,7 +383,7 @@
 
         if (apiFunc) {
           const res = await apiFunc();
-          if (res && res.success && res.data) {
+          if (res && res.success && res.data && (res.data.fieldVisibility || res.data.customFields || res.data.formEmbedUrl || Object.keys(res.data.fieldMapping || {}).length > 0 || res.data.intakeDeadline)) {
             config = res.data;
           }
         }
