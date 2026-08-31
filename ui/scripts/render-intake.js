@@ -30,7 +30,6 @@ async function renderIntakeFormView() {
   if (!container) return;
 
   try {
-    showLoading(true);
     renderNativeFormOptions();
     await renderIntakeSetupCard();
     if (typeof window.initStudentLinkView === 'function') {
@@ -44,9 +43,7 @@ async function renderIntakeFormView() {
       idInput.value = `STU-${nextNum}`;
     }
   } catch (e) {
-    showToast('Error rendering Application Form: ' + e.toString(), 'danger');
-  } finally {
-    showLoading(false);
+    console.warn('Notice rendering Application Form View:', e);
   }
 }
 

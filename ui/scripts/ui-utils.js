@@ -43,10 +43,24 @@ window.closeModal = function(id) {
   document.getElementById(id)?.classList.remove('active');
 };
 
-// Loading Overlay Control
+// Loading Overlay Control (with 2.5s max safety auto-dismiss)
+let _loadingSafetyTimer = null;
 window.showLoading = function(show) {
   const el = document.getElementById('loading-overlay');
-  if (el) el.style.display = show ? 'flex' : 'none';
+  if (_loadingSafetyTimer) {
+    clearTimeout(_loadingSafetyTimer);
+    _loadingSafetyTimer = null;
+  }
+
+  if (el) {
+    el.style.display = show ? 'flex' : 'none';
+    if (show) {
+      _loadingSafetyTimer = setTimeout(() => {
+        if (el) el.style.display = 'none';
+        _loadingSafetyTimer = null;
+      }, 2500);
+    }
+  }
 };
 
 // Toast Notification System (AGENTS.md Rule 4 - Icons over Emojis)

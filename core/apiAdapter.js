@@ -28,16 +28,25 @@
           [funcName](...args);
       });
     } else if (window.GAS_API_URL) {
-      // Remote HTTP fetch bridge to Apps Script Web App for GitHub Pages
+      // Remote HTTP fetch bridge to Apps Script Web App for GitHub Pages with 3s Timeout
       const postData = JSON.stringify({ action: funcName, args: args });
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+
       return fetch(window.GAS_API_URL, {
         method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: postData,
-        redirect: 'follow'
-      }).then(r => r.json()).catch(err => {
-        console.warn('GAS fetch notice:', err);
+        redirect: 'follow',
+        signal: controller.signal
+      }).then(r => {
+        clearTimeout(timeoutId);
+        return r.json();
+      }).catch(err => {
+        clearTimeout(timeoutId);
+        console.warn(`GAS fetch notice for ${funcName}:`, err.name === 'AbortError' ? 'Network timeout (3s) - fell back to local store.' : err);
         return LocalMockAPI[funcName] ? LocalMockAPI[funcName](...args) : { success: false };
       });
     }
@@ -94,13 +103,7 @@
     savePriorityTiers: (tiers) => isGoogleAppsScript ? callGasFunction('savePriorityTiers', tiers) : LocalMockAPI.savePriorityTiers(tiers),
     getPropertyConfig: () => isGoogleAppsScript ? callGasFunction('getPropertyConfig') : LocalMockAPI.getPropertyConfig(),
     savePropertyConfig: (softFactors, hardConstraints, collegeLocation, autoEmailNotices) => isGoogleAppsScript ? callGasFunction('savePropertyConfig', { softFactors, hardConstraints, collegeLocation, autoEmailNotices }) : LocalMockAPI.savePropertyConfig(softFactors, hardConstraints, collegeLocation, autoEmailNotices),
-    getFormIntakeConfig: async () => {
-      let gasRes = null;
-      try {
-        gasRes = await callGasFunction('getFormIntakeConfig');
-      } catch(e){}
-      return (gasRes && gasRes.success) ? gasRes : LocalMockAPI.getFormIntakeConfig();
-    },
+    getFormIntakeConfig: () => isGoogleAppsScript ? callGasFunction('getFormIntakeConfig') : LocalMockAPI.getFormIntakeConfig(),
     saveFormIntakeConfig: async (config) => {
       try { callGasFunction('saveFormIntakeConfig', config); } catch(e){}
       return LocalMockAPI.saveFormIntakeConfig(config);
