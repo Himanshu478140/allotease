@@ -104,11 +104,14 @@
       return LocalMockAPI.savePropertyConfig(softFactors, hardConstraints, collegeLocation, autoEmailNotices);
     },
     getFormIntakeConfig: async () => {
-      let gasRes = null;
-      try {
-        gasRes = await callGasFunction('getFormIntakeConfig');
-      } catch(e){}
-      return (gasRes && gasRes.success) ? gasRes : LocalMockAPI.getFormIntakeConfig();
+      const localRes = await LocalMockAPI.getFormIntakeConfig();
+      // Background async sync with Apps Script without hanging UI
+      callGasFunction('getFormIntakeConfig').then(gasRes => {
+        if (gasRes && gasRes.success && gasRes.data) {
+          if (window.LocalMockDB) window.LocalMockDB.formIntakeConfig = gasRes.data;
+        }
+      }).catch(() => {});
+      return localRes;
     },
     saveFormIntakeConfig: async (config) => {
       try { callGasFunction('saveFormIntakeConfig', config); } catch(e){}

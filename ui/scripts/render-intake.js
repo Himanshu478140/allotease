@@ -348,12 +348,14 @@ async function renderIntakeSetupCard() {
       window.populateFormBuilderUI(activeIntakeConfig);
     }
 
-    // Auto-fetch headers if response sheet URL is present
+    // Non-blocking auto-fetch headers if response sheet URL is present
     if (activeIntakeConfig.responseSheetUrl) {
-      const headerRes = await api.fetchResponseSheetHeaders(activeIntakeConfig.responseSheetUrl);
-      if (headerRes.success) {
-        currentExtractedHeaders = headerRes.data.headers || [];
-      }
+      api.fetchResponseSheetHeaders(activeIntakeConfig.responseSheetUrl).then(headerRes => {
+        if (headerRes && headerRes.success) {
+          currentExtractedHeaders = headerRes.data.headers || [];
+          renderFieldMappingRows();
+        }
+      }).catch(err => console.warn('Header fetch notice:', err));
     }
 
     renderFieldMappingRows();
