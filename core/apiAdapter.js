@@ -89,20 +89,11 @@
   window.api = {
     isGas: isGoogleAppsScript,
     getBuildingLayout: () => isGoogleAppsScript ? callGasFunction('getBuildingLayout') : LocalMockAPI.getBuildingLayout(),
-    saveBuildingLayout: async (layout) => {
-      try { callGasFunction('saveBuildingLayout', layout); } catch(e){}
-      return LocalMockAPI.saveBuildingLayout(layout);
-    },
+    saveBuildingLayout: (layout) => isGoogleAppsScript ? callGasFunction('saveBuildingLayout', layout) : LocalMockAPI.saveBuildingLayout(layout),
     getPriorityTiers: () => isGoogleAppsScript ? callGasFunction('getPriorityTiers') : LocalMockAPI.getPriorityTiers(),
-    savePriorityTiers: async (tiers) => {
-      try { callGasFunction('savePriorityTiers', tiers); } catch(e){}
-      return LocalMockAPI.savePriorityTiers(tiers);
-    },
+    savePriorityTiers: (tiers) => isGoogleAppsScript ? callGasFunction('savePriorityTiers', tiers) : LocalMockAPI.savePriorityTiers(tiers),
     getPropertyConfig: () => isGoogleAppsScript ? callGasFunction('getPropertyConfig') : LocalMockAPI.getPropertyConfig(),
-    savePropertyConfig: async (softFactors, hardConstraints, collegeLocation, autoEmailNotices) => {
-      try { callGasFunction('savePropertyConfig', { softFactors, hardConstraints, collegeLocation, autoEmailNotices }); } catch(e){}
-      return LocalMockAPI.savePropertyConfig(softFactors, hardConstraints, collegeLocation, autoEmailNotices);
-    },
+    savePropertyConfig: (softFactors, hardConstraints, collegeLocation, autoEmailNotices) => isGoogleAppsScript ? callGasFunction('savePropertyConfig', { softFactors, hardConstraints, collegeLocation, autoEmailNotices }) : LocalMockAPI.savePropertyConfig(softFactors, hardConstraints, collegeLocation, autoEmailNotices),
     getFormIntakeConfig: async () => {
       let gasRes = null;
       try {
@@ -117,22 +108,13 @@
     fetchResponseSheetHeaders: (url) => isGoogleAppsScript ? callGasFunction('fetchResponseSheetHeaders', url) : LocalMockAPI.fetchResponseSheetHeaders(url),
     syncFormResponses: () => isGoogleAppsScript ? callGasFunction('syncFormResponses') : LocalMockAPI.syncFormResponses(),
     sendAllocationEmails: (ids) => isGoogleAppsScript ? callGasFunction('sendAllocationEmails', ids) : LocalMockAPI.sendAllocationEmails(ids),
-    updatePaymentStatus: async (id, paid, due, status) => {
-      try { callGasFunction('updatePaymentStatus', id, paid, due, status); } catch(e){}
-      return LocalMockAPI.updatePaymentStatus(id, paid, due, status);
-    },
-    checkoutStudent: async (id, allocId) => {
-      try { callGasFunction('checkoutStudent', id, allocId); } catch(e){}
-      return LocalMockAPI.checkoutStudent(id, allocId);
-    },
+    updatePaymentStatus: (id, paid, due, status) => isGoogleAppsScript ? callGasFunction('updatePaymentStatus', id, paid, due, status) : LocalMockAPI.updatePaymentStatus(id, paid, due, status),
+    checkoutStudent: (id, allocId) => isGoogleAppsScript ? callGasFunction('checkoutStudent', id, allocId) : LocalMockAPI.checkoutStudent(id, allocId),
     resetDemo: () => isGoogleAppsScript ? callGasFunction('resetDemo') : LocalMockAPI.resetDemo(),
     generateDemoData: () => isGoogleAppsScript ? callGasFunction('generateDemoData') : LocalMockAPI.generateDemoData(),
     getStudents: () => isGoogleAppsScript ? callGasFunction('getStudents') : LocalMockAPI.getStudents(),
     getRooms: () => isGoogleAppsScript ? callGasFunction('getRooms') : LocalMockAPI.getRooms(),
-    saveRooms: async (rooms) => {
-      try { callGasFunction('saveRooms', rooms); } catch(e){}
-      return LocalMockAPI.saveRooms(rooms);
-    },
+    saveRooms: (rooms) => isGoogleAppsScript ? callGasFunction('saveRooms', rooms) : LocalMockAPI.saveRooms(rooms),
     getAllocations: () => isGoogleAppsScript ? callGasFunction('getAllocations') : LocalMockAPI.getAllocations(),
     getWaitingList: () => isGoogleAppsScript ? callGasFunction('getWaitingList') : LocalMockAPI.getWaitingList(),
     getDashboardStats: () => isGoogleAppsScript ? callGasFunction('getDashboardStats') : LocalMockAPI.getDashboardStats(),
