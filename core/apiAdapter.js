@@ -103,18 +103,7 @@
     savePriorityTiers: (tiers) => isGoogleAppsScript ? callGasFunction('savePriorityTiers', tiers) : LocalMockAPI.savePriorityTiers(tiers),
     getPropertyConfig: () => isGoogleAppsScript ? callGasFunction('getPropertyConfig') : LocalMockAPI.getPropertyConfig(),
     savePropertyConfig: (softFactors, hardConstraints, collegeLocation, autoEmailNotices) => isGoogleAppsScript ? callGasFunction('savePropertyConfig', { softFactors, hardConstraints, collegeLocation, autoEmailNotices }) : LocalMockAPI.savePropertyConfig(softFactors, hardConstraints, collegeLocation, autoEmailNotices),
-    getFormIntakeConfig: async () => {
-      if (isGoogleAppsScript) {
-        return callGasFunction('getFormIntakeConfig');
-      }
-      try {
-        const gasRes = await callGasFunction('getFormIntakeConfig');
-        if (gasRes && gasRes.success && gasRes.data && (gasRes.data.fieldVisibility || gasRes.data.customFields || gasRes.data.formEmbedUrl || Object.keys(gasRes.data.fieldMapping || {}).length > 0 || gasRes.data.intakeDeadline)) {
-          return gasRes;
-        }
-      } catch (e) {}
-      return LocalMockAPI.getFormIntakeConfig();
-    },
+    getFormIntakeConfig: () => isGoogleAppsScript ? callGasFunction('getFormIntakeConfig') : LocalMockAPI.getFormIntakeConfig(),
     saveFormIntakeConfig: async (config) => {
       try { callGasFunction('saveFormIntakeConfig', config); } catch(e){}
       return LocalMockAPI.saveFormIntakeConfig(config);
