@@ -104,14 +104,11 @@
       return LocalMockAPI.savePropertyConfig(softFactors, hardConstraints, collegeLocation, autoEmailNotices);
     },
     getFormIntakeConfig: async () => {
-      const localRes = await LocalMockAPI.getFormIntakeConfig();
-      // Background async sync with Apps Script without hanging UI
-      callGasFunction('getFormIntakeConfig').then(gasRes => {
-        if (gasRes && gasRes.success && gasRes.data) {
-          if (window.LocalMockDB) window.LocalMockDB.formIntakeConfig = gasRes.data;
-        }
-      }).catch(() => {});
-      return localRes;
+      let gasRes = null;
+      try {
+        gasRes = await callGasFunction('getFormIntakeConfig');
+      } catch(e){}
+      return (gasRes && gasRes.success) ? gasRes : LocalMockAPI.getFormIntakeConfig();
     },
     saveFormIntakeConfig: async (config) => {
       try { callGasFunction('saveFormIntakeConfig', config); } catch(e){}
@@ -142,15 +139,9 @@
     getBeforeVsAfterMetrics: () => isGoogleAppsScript ? callGasFunction('getBeforeVsAfterMetrics') : LocalMockAPI.getBeforeVsAfterMetrics(),
     getReportData: () => isGoogleAppsScript ? callGasFunction('getReportData') : (async () => ({ success: true, data: { byBranch: { CSE: 16, ECE: 12, ME: 8, CE: 4 }, byYear: { '1st Year': 10, '2nd Year': 10, '3rd Year': 10, 'Final Year': 10 } } }))(),
     calculateScore: (student, room, weights) => window.mockCalculateSoftScore(student, room, weights),
-    runAllocation: async (weights) => {
-      try { callGasFunction('runSmartAllocation', weights); } catch(e){}
-      return LocalMockAPI.runAllocation(weights);
-    },
+    runAllocation: (weights) => isGoogleAppsScript ? callGasFunction('runSmartAllocation', weights) : LocalMockAPI.runAllocation(weights),
     simulateAllocation: (weights) => isGoogleAppsScript ? callGasFunction('simulateAllocation', weights) : LocalMockAPI.simulateAllocation(weights),
-    changeRoom: async (allocId, newRoomId, reason) => {
-      try { callGasFunction('changeRoom', allocId, newRoomId, reason); } catch(e){}
-      return LocalMockAPI.changeRoom(allocId, newRoomId, reason);
-    },
+    changeRoom: (allocId, newRoomId, reason) => isGoogleAppsScript ? callGasFunction('changeRoom', allocId, newRoomId, reason) : LocalMockAPI.changeRoom(allocId, newRoomId, reason),
     addStudent: async (data) => {
       try { callGasFunction('addStudent', data); } catch(e){}
       return LocalMockAPI.addStudent(data);
